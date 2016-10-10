@@ -33,7 +33,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
 
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.plugin.jabref.BibsonomyProperties;

@@ -29,7 +29,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.ImageIcon;
 
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.model.entry.BibEntry;
 
 import org.bibsonomy.plugin.jabref.worker.DeletePostsWorker;
 

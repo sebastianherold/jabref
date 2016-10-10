@@ -32,8 +32,8 @@ import java.util.Vector;
 import javax.swing.JEditorPane;
 
 import net.sf.jabref.Globals;
-import net.sf.jabref.JabRefFrame;
 import net.sf.jabref.MetaData;
+import net.sf.jabref.gui.JabRefFrame;
 
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.model.BibTex;

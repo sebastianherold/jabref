@@ -27,7 +27,8 @@ package org.bibsonomy.plugin.jabref.util;
 
 import java.util.Set;
 
-import net.sf.jabref.BibtexEntry;
+import net.sf.jabref.logic.util.strings.StringUtil;
+import net.sf.jabref.model.entry.BibEntry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

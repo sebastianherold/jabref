@@ -25,9 +25,9 @@
 
 package org.bibsonomy.plugin.jabref.util;
 
-import net.sf.jabref.AbstractWorker;
-import net.sf.jabref.CallBack;
-import net.sf.jabref.Worker;
+import net.sf.jabref.gui.worker.AbstractWorker;
+import net.sf.jabref.gui.worker.CallBack;
+import net.sf.jabref.gui.worker.Worker;
 
 /**
  * {@link WorkerUtil} runs a worker asynchronouslys

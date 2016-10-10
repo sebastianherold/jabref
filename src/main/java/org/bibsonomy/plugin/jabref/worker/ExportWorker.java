@@ -28,8 +28,9 @@ package org.bibsonomy.plugin.jabref.worker;
 import java.util.Collections;
 import java.util.List;
 
-import net.sf.jabref.BibtexEntry;
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.model.entry.BibEntry;
+import net.sf.jabref.model.entry.FieldName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -29,9 +29,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.ImageIcon;
 
+import net.sf.jabref.gui.JabRefFrame;
 import org.bibsonomy.plugin.jabref.worker.SynchronizationWorker;
 
-import net.sf.jabref.JabRefFrame;
 
 /**
  * {@link SynchronizeAction} runs the {@link SynchronizationWorker}

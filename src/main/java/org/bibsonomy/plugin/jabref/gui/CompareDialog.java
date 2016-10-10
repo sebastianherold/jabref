@@ -42,9 +42,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import net.sf.jabref.BibtexEntry;
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
 import net.sf.jabref.Util;
+import net.sf.jabref.model.entry.BibEntry;
+import net.sf.jabref.model.entry.FieldName;
 
 import org.bibsonomy.model.Post;
 import org.bibsonomy.model.Resource;

@@ -25,16 +25,16 @@
 
 package org.bibsonomy.plugin.jabref.util;
 
-import static org.bibsonomy.util.ValidationUtils.present;
-
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import net.sf.jabref.BibtexEntry;
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.model.entry.BibEntry;
 
 import org.bibsonomy.plugin.jabref.BibsonomyProperties;
+
+import static org.bibsonomy.util.ValidationUtils.present;
 
 /**
  * {@link CheckTagsUtil} check a list of posts, if a posts has no tags assigned

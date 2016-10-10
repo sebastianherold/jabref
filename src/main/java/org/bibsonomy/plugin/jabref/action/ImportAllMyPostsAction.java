@@ -27,12 +27,13 @@ package org.bibsonomy.plugin.jabref.action;
 
 import java.awt.event.ActionEvent;
 
+import net.sf.jabref.gui.JabRefFrame;
+
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.gui.SearchType;
 import org.bibsonomy.plugin.jabref.worker.ImportPostsByCriteriaWorker;
 
-import net.sf.jabref.JabRefFrame;
 
 /**
  * {@link ImportAllMyPostsAction} runs the {@link ImportPostsByCriteriaWorker} to import all posts of the user.

@@ -31,9 +31,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import net.sf.jabref.BibtexDatabase;
-import net.sf.jabref.BibtexEntry;
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.model.database.BibDatabase;
+import net.sf.jabref.model.entry.BibEntry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

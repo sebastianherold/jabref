@@ -31,10 +31,10 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import net.sf.jabref.BibtexEntry;
-import net.sf.jabref.BibtexFields;
-import net.sf.jabref.JabRefFrame;
-import net.sf.jabref.gui.ImportInspectionDialog;
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.gui.importer.ImportInspectionDialog;
+import net.sf.jabref.model.entry.BibEntry;
+import net.sf.jabref.model.entry.FieldName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -30,9 +30,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
+import net.sf.jabref.gui.JabRefFrame;
 import org.bibsonomy.plugin.jabref.gui.BibsonomySettingsDialog;
 
-import net.sf.jabref.JabRefFrame;
 
 /**
  * {@link ShowSettingsDialogAction} creates and displays the {@link PluginSettingsDialog}

@@ -30,11 +30,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.gui.SidePaneManager;
 
 import org.bibsonomy.plugin.jabref.BibsonomySidePaneComponent;
 import org.bibsonomy.plugin.jabref.gui.BibsonomySidePanel;
-import net.sf.jabref.JabRefFrame;
-import net.sf.jabref.SidePaneManager;
 
 /**
  * Display or hide the {@link PluginSidePanel}

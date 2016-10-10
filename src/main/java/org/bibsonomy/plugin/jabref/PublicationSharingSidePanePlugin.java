@@ -27,16 +27,16 @@ package org.bibsonomy.plugin.jabref;
 
 import javax.swing.JMenuItem;
 
+import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.gui.SidePaneComponent;
+import net.sf.jabref.gui.SidePaneManager;
+
 import org.bibsonomy.plugin.jabref.gui.BibsonomyMenuItem;
 import org.bibsonomy.plugin.jabref.gui.BibsonomyToolBarExtender;
 import org.bibsonomy.plugin.jabref.gui.EntryEditorTabExtender;
 import org.bibsonomy.plugin.jabref.listener.BibsonomyDataBaseChangeListener;
 import org.bibsonomy.plugin.jabref.listener.TabbedPaneChangeListener;
 
-import net.sf.jabref.JabRefFrame;
-import net.sf.jabref.SidePaneComponent;
-import net.sf.jabref.SidePaneManager;
-import net.sf.jabref.plugin.SidePanePlugin;
 /**
  * PublicationSharingSidePanelPlugin - This is the entry point of the plugin. 
  * It defines the MenuItem, the ShortcutKey and the SidePaneComponent.

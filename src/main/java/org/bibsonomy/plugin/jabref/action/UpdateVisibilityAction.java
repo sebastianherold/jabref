@@ -30,7 +30,7 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
 
 import org.bibsonomy.plugin.jabref.gui.GroupingComboBoxItem;
 import org.bibsonomy.plugin.jabref.worker.UpdateVisibilityWorker;

@@ -25,12 +25,12 @@
 
 package org.bibsonomy.plugin.jabref.gui;
 
+import net.sf.jabref.preferences.JabRefPreferences;
 
 import org.bibsonomy.plugin.jabref.BibsonomyGlobals;
 import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import net.sf.jabref.EntryEditor;
 import net.sf.jabref.Globals;
-import net.sf.jabref.JabRefPreferences;
 
 
 /**

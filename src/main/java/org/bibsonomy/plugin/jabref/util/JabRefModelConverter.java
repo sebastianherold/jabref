@@ -44,10 +44,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.jabref.BibtexEntry;
-import net.sf.jabref.BibtexEntryType;
-import net.sf.jabref.Globals;
-import net.sf.jabref.JabRefPreferences;
+import net.sf.jabref.logic.util.strings.StringUtil;
+import net.sf.jabref.model.entry.BibEntry;
+import net.sf.jabref.model.entry.BibtexEntryTypes;
+import net.sf.jabref.model.entry.EntryType;
+import net.sf.jabref.model.entry.FieldName;
+import net.sf.jabref.model.entry.MonthUtil;
+import net.sf.jabref.preferences.JabRefPreferences;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

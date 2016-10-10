@@ -29,7 +29,7 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 
-import net.sf.jabref.JabRefFrame;
+import net.sf.jabref.gui.JabRefFrame;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
