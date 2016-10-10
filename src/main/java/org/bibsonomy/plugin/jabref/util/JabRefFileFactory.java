@@ -1,6 +1,3 @@
-/*
- * Created on 08.03.2013
- */
 package org.bibsonomy.plugin.jabref.util;
 
 
