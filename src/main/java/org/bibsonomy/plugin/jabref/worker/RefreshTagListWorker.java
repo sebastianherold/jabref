@@ -38,7 +38,7 @@ import net.sf.jabref.MetaData;
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.model.BibTex;
 import org.bibsonomy.model.Tag;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 
 
 /**

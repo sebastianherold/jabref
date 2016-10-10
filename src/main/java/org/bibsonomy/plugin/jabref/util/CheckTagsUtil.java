@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 import net.sf.jabref.BibtexEntry;
 import net.sf.jabref.JabRefFrame;
 
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 
 /**
  * {@link CheckTagsUtil} check a list of posts, if a posts has no tags assigned

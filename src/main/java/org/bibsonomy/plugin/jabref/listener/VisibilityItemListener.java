@@ -28,7 +28,7 @@ package org.bibsonomy.plugin.jabref.listener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.gui.GroupingComboBoxItem;
 
 /**

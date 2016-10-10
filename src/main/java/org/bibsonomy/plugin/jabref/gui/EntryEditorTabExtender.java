@@ -25,9 +25,9 @@
 
 package org.bibsonomy.plugin.jabref.gui;
 
-import org.bibsonomy.plugin.jabref.PluginGlobals;
-import org.bibsonomy.plugin.jabref.PluginProperties;
 
+import org.bibsonomy.plugin.jabref.BibsonomyGlobals;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import net.sf.jabref.EntryEditor;
 import net.sf.jabref.Globals;
 import net.sf.jabref.JabRefPreferences;

@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.bibsonomy.model.Post;
 import org.bibsonomy.model.Resource;
 import org.bibsonomy.model.logic.LogicInterface;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.gui.CompareDialog;
 import org.bibsonomy.plugin.jabref.util.BibtexEntryUtil;
 import org.bibsonomy.plugin.jabref.util.JabRefModelConverter;

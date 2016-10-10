@@ -27,10 +27,10 @@ package org.bibsonomy.plugin.jabref;
 
 import javax.swing.JMenuItem;
 
+import org.bibsonomy.plugin.jabref.gui.BibsonomyMenuItem;
+import org.bibsonomy.plugin.jabref.gui.BibsonomyToolBarExtender;
 import org.bibsonomy.plugin.jabref.gui.EntryEditorTabExtender;
-import org.bibsonomy.plugin.jabref.gui.PluginMenuItem;
-import org.bibsonomy.plugin.jabref.gui.PluginToolBarExtender;
-import org.bibsonomy.plugin.jabref.listener.PluginDataBaseChangeListener;
+import org.bibsonomy.plugin.jabref.listener.BibsonomyDataBaseChangeListener;
 import org.bibsonomy.plugin.jabref.listener.TabbedPaneChangeListener;
 
 import net.sf.jabref.JabRefFrame;

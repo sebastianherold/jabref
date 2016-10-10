@@ -7,7 +7,7 @@ package org.bibsonomy.plugin.jabref.util;
 import net.sf.jabref.GUIGlobals;
 import net.sf.jabref.JabRefFrame;
 
-import org.bibsonomy.plugin.jabref.PluginGlobals;
+import org.bibsonomy.plugin.jabref.BibsonomyGlobals;
 import org.bibsonomy.rest.client.util.MultiDirectoryFileFactory;
 
 public class JabRefFileFactory extends MultiDirectoryFileFactory {

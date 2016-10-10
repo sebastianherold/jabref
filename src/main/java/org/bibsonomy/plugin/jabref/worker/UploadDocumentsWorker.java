@@ -34,7 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bibsonomy.model.Document;
 import org.bibsonomy.model.logic.LogicInterface;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 
 /**
  * Upload documents from the file system directly to the service.

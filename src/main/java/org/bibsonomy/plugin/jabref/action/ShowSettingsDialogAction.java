@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
-import org.bibsonomy.plugin.jabref.gui.PluginSettingsDialog;
+import org.bibsonomy.plugin.jabref.gui.BibsonomySettingsDialog;
 
 import net.sf.jabref.JabRefFrame;
 

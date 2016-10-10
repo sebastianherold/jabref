@@ -38,7 +38,7 @@ import org.bibsonomy.model.BibTex;
 import org.bibsonomy.model.Post;
 import org.bibsonomy.model.Resource;
 import org.bibsonomy.model.User;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.action.ShowSettingsDialogAction;
 import org.bibsonomy.plugin.jabref.util.JabRefModelConverter;
 import org.bibsonomy.plugin.jabref.util.WorkerUtil;

@@ -36,7 +36,7 @@ import javax.swing.JEditorPane;
 import net.sf.jabref.JabRefFrame;
 
 import org.bibsonomy.common.enums.GroupingEntity;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.gui.GroupingComboBoxItem;
 import org.bibsonomy.plugin.jabref.worker.RefreshTagListWorker;
 import org.bibsonomy.plugin.jabref.worker.UpdateVisibilityWorker;

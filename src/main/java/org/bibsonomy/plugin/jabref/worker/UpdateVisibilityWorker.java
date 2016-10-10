@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.model.Group;
 import org.bibsonomy.model.User;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.action.ShowSettingsDialogAction;
 import org.bibsonomy.plugin.jabref.gui.GroupingComboBoxItem;
 import org.bibsonomy.rest.exceptions.AuthenticationException;

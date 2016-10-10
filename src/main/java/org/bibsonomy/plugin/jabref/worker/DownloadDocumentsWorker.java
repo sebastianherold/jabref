@@ -36,7 +36,7 @@ import org.bibsonomy.model.BibTex;
 import org.bibsonomy.model.Document;
 import org.bibsonomy.model.Post;
 import org.bibsonomy.model.Resource;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.action.ShowSettingsDialogAction;
 import org.bibsonomy.rest.exceptions.AuthenticationException;
 import org.bibsonomy.util.file.FileUtil;

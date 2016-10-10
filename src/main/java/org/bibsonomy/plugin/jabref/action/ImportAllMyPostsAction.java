@@ -28,7 +28,7 @@ package org.bibsonomy.plugin.jabref.action;
 import java.awt.event.ActionEvent;
 
 import org.bibsonomy.common.enums.GroupingEntity;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.gui.SearchType;
 import org.bibsonomy.plugin.jabref.worker.ImportPostsByCriteriaWorker;
 

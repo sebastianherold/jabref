@@ -32,7 +32,7 @@ import net.sf.jabref.JabRefFrame;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 
 /**
  * Delete a Post from the service

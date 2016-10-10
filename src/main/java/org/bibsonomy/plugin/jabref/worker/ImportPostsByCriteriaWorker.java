@@ -42,11 +42,11 @@ import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.model.BibTex;
 import org.bibsonomy.model.Post;
 import org.bibsonomy.model.Resource;
-import org.bibsonomy.plugin.jabref.PluginProperties;
+import org.bibsonomy.plugin.jabref.BibsonomyProperties;
 import org.bibsonomy.plugin.jabref.action.ShowSettingsDialogAction;
 import org.bibsonomy.plugin.jabref.gui.SearchType;
+import org.bibsonomy.plugin.jabref.util.BibsonomyCallBack;
 import org.bibsonomy.plugin.jabref.util.JabRefModelConverter;
-import org.bibsonomy.plugin.jabref.util.PluginCallBack;
 import org.bibsonomy.rest.exceptions.AuthenticationException;
 
 /**
