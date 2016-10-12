@@ -10,16 +10,21 @@ import net.sf.jabref.gui.worker.Worker;
  *
  */
 public class WorkerUtil {
-	
-	public static void performAsynchronously(AbstractWorker worker) throws Throwable {
 
+	/**
+	 * @deprecated Duplicate code.
+	 * See {@link net.sf.jabref.gui.exporter.SaveDatabaseAction}
+	 */
+	@Deprecated
+	public static void performAsynchronously(AbstractWorker worker) throws Throwable {
+		//TODO: Duplicate code. See SaveDatabaseAction - zellerdev
 		Worker wrk = worker.getWorker();
 		CallBack cb = worker.getCallBack();
-			
+
 		worker.init();
-			
+
 		wrk.run();
-			
+
 		cb.update();
 	}
 }
