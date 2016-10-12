@@ -18,33 +18,27 @@ import org.bibsonomy.plugin.jabref.worker.ImportPostsByCriteriaWorker;
  *
  * @author Waldemar Biller <biller@cs.uni-kassel.de>
  */
-public class SearchAction extends AbstractPluginAction {
+public class SearchAction extends AbstractBibsonomyAction {
 
-	private static final long serialVersionUID = -2051315699879554553L;
+    private JTextField searchTextField;
+    private JComboBox<?> searchTypeComboBox;
+    private JComboBox<?> groupingComboBox;
 
-	private JTextField searchTextField;
+    public void actionPerformed(ActionEvent e) {
+        SearchType searchType = ((SearchTypeComboBoxItem) searchTypeComboBox.getSelectedItem()).getKey();
+        String criteria = searchTextField.getText();
 
-	private JComboBox<?> searchTypeComboBox;
+        if (criteria != null) {
+            ImportPostsByCriteriaWorker worker = new ImportPostsByCriteriaWorker(getJabRefFrame(), criteria, searchType, ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getKey(), ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getValue(), false);
+            performAsynchronously(worker);
+        }
+    }
 
-	private JComboBox<?> groupingComboBox;
+    public SearchAction(JabRefFrame jabRefFrame, JTextField searchTextField, JComboBox<?> searchTypeComboBox, JComboBox<?> groupingComboBox) {
+        super(jabRefFrame, "", new ImageIcon(SearchAction.class.getResource("/images/images/magnifier.png")));
 
-	public void actionPerformed(ActionEvent e) {
-		
-		SearchType st = ((SearchTypeComboBoxItem) searchTypeComboBox.getSelectedItem()).getKey();
-		String criteria = searchTextField.getText();
-		
-		if(criteria != null) {
-			ImportPostsByCriteriaWorker worker = new ImportPostsByCriteriaWorker(getJabRefFrame(), criteria, st, ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getKey(), ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getValue(), false);
-			performAsynchronously(worker);
-		}
-	}
-
-	public SearchAction(JabRefFrame jabRefFrame, JTextField searchTextField, JComboBox<?> searchTypeComboBox, JComboBox<?> groupingComboBox) {
-		
-		super(jabRefFrame, "", new ImageIcon(SearchAction.class.getResource("/images/magnifier.png")));
-		
-		this.searchTextField = searchTextField;
-		this.searchTypeComboBox = searchTypeComboBox;
-		this.groupingComboBox = groupingComboBox;
-	}
+        this.searchTextField = searchTextField;
+        this.searchTypeComboBox = searchTypeComboBox;
+        this.groupingComboBox = groupingComboBox;
+    }
 }

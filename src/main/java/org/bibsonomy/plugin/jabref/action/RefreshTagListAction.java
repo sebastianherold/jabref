@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 
 import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.logic.l10n.Localization;
 
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.plugin.jabref.BibsonomyProperties;
@@ -21,41 +22,37 @@ import org.bibsonomy.plugin.jabref.worker.UpdateVisibilityWorker;
  *
  * @author Waldemar Biller <biller@cs.uni-kassel.de>
  */
-public class RefreshTagListAction extends AbstractPluginAction {
+public class RefreshTagListAction extends AbstractBibsonomyAction {
 
-	private static final long serialVersionUID = 3285344367883492911L;
-	
-	private static List<GroupingComboBoxItem> defaultGroupings;
-	
-	private JEditorPane tagCloud;
+    private static List<GroupingComboBoxItem> defaultGroupings;
 
-	private JComboBox<? super GroupingComboBoxItem> groupingComboBox;
+    private JEditorPane tagCloud;
 
-	public void actionPerformed(ActionEvent e) {
-	
-		// refresh the tag cloud
-		RefreshTagListWorker worker = new RefreshTagListWorker(getJabRefFrame(), tagCloud, ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getKey(), ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getValue());
-		performAsynchronously(worker);
-		
-		// update the "import posts from.." combo box
-		UpdateVisibilityWorker visWorker = new UpdateVisibilityWorker(getJabRefFrame(), groupingComboBox, getDefaultGroupings());
-		performAsynchronously(visWorker);
-	}
+    private JComboBox<? super GroupingComboBoxItem> groupingComboBox;
 
-	public RefreshTagListAction(JabRefFrame jabRefFrame, JEditorPane tagCloud, JComboBox<? super GroupingComboBoxItem> groupingComboBox) {
-		
-		super(jabRefFrame, "Refresh", new ImageIcon(RefreshTagListAction.class.getResource("/images/arrow-circle-225.png")));
-		this.tagCloud = tagCloud;
+    public void actionPerformed(ActionEvent e) {
+        // refresh the tag cloud
+        RefreshTagListWorker worker = new RefreshTagListWorker(getJabRefFrame(), tagCloud, ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getKey(), ((GroupingComboBoxItem) groupingComboBox.getSelectedItem()).getValue());
+        performAsynchronously(worker);
 
-		this.groupingComboBox = groupingComboBox;
-	}
-	
-	private static List<GroupingComboBoxItem> getDefaultGroupings() {
-		if (defaultGroupings == null) {
-			defaultGroupings = new ArrayList<GroupingComboBoxItem>();
-			defaultGroupings.add(new GroupingComboBoxItem(GroupingEntity.ALL, "all users"));
-			defaultGroupings.add(new GroupingComboBoxItem(GroupingEntity.USER, PluginProperties.getUsername()));
-		}
-		return defaultGroupings;
-	}
+        // update the "import posts from.." combo box
+        UpdateVisibilityWorker visWorker = new UpdateVisibilityWorker(getJabRefFrame(), groupingComboBox, getDefaultGroupings());
+        performAsynchronously(visWorker);
+    }
+
+    public RefreshTagListAction(JabRefFrame jabRefFrame, JEditorPane tagCloud, JComboBox<? super GroupingComboBoxItem> groupingComboBox) {
+        super(jabRefFrame, Localization.lang("Refresh"), new ImageIcon(RefreshTagListAction.class.getResource("/images/images/arrow-circle-225.png")));
+        this.tagCloud = tagCloud;
+
+        this.groupingComboBox = groupingComboBox;
+    }
+
+    private static List<GroupingComboBoxItem> getDefaultGroupings() {
+        if (defaultGroupings == null) {
+            defaultGroupings = new ArrayList<>();
+            defaultGroupings.add(new GroupingComboBoxItem(GroupingEntity.ALL, "all users"));
+            defaultGroupings.add(new GroupingComboBoxItem(GroupingEntity.USER, BibsonomyProperties.getUsername()));
+        }
+        return defaultGroupings;
+    }
 }
