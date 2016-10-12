@@ -1,11 +1,10 @@
 package org.bibsonomy.plugin.jabref.gui;
 
+import net.sf.jabref.logic.l10n.Localization;
 import net.sf.jabref.preferences.JabRefPreferences;
 
 import org.bibsonomy.plugin.jabref.BibsonomyGlobals;
 import org.bibsonomy.plugin.jabref.BibsonomyProperties;
-import net.sf.jabref.EntryEditor;
-import net.sf.jabref.Globals;
 
 
 /**
@@ -16,20 +15,17 @@ import net.sf.jabref.Globals;
 public class EntryEditorTabExtender {
 
 	public static void extend() {
-		
 		boolean generalTab = false, bibsonomyTab = false, extraTab = false;
 		int lastTabId = 0, extraTabID = -1;
 		
 		JabRefPreferences preferences = JabRefPreferences.getInstance();
 		if(preferences.hasKey(JabRefPreferences.CUSTOM_TAB_NAME)) {
 			
-			
 			while(preferences.hasKey(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId)) {
-				
-				if(preferences.get(JabRefPreferences.CUSTOM_TYPE_NAME + lastTabId).equals(Globals.lang("General")))
+				if(preferences.get(JabRefPreferences.getCustomTypeName() + lastTabId).equals(Localization.lang("General")))
 					generalTab = true;
 				
-				if(preferences.get(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId).equals(PluginGlobals.PLUGIN_NAME))
+				if(preferences.get(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId).equals(BibsonomyGlobals.BIBSONOMY_NAME))
 					bibsonomyTab = true;
 				
 				if("Extra".equals(preferences.get(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId))) {
@@ -43,26 +39,26 @@ public class EntryEditorTabExtender {
 		if(!generalTab) {
 			
 			preferences.put(JabRefPreferences.CUSTOM_TAB_FIELDS + lastTabId, "crossref;file;doi;url;citeseerurl;comment;owner;timestamp");
-			preferences.put(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId, Globals.lang("General"));
+			preferences.put(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId, Localization.lang("General"));
 			lastTabId++;
 		}
 		
 		if (!bibsonomyTab) {
 			preferences.put(JabRefPreferences.CUSTOM_TAB_FIELDS + lastTabId, "interhash;intrahash;keywords;groups;privnote");
-			preferences.put(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId, "Bibsonomy");
+			preferences.put(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId, "BibSonomy");
 			lastTabId++;
 		}
 
 		if (!extraTab) {
-			preferences.put(JabRefPreferences.CUSTOM_TAB_FIELDS + lastTabId, PluginProperties.getExtraTabFields());
+			preferences.put(JabRefPreferences.CUSTOM_TAB_FIELDS + lastTabId, BibsonomyProperties.getExtraTabFields());
 			preferences.put(JabRefPreferences.CUSTOM_TAB_NAME + lastTabId, "Extra");
 		}
 
 		if (extraTab) {
 			if (!preferences.get(JabRefPreferences.CUSTOM_TAB_FIELDS + extraTabID).equals(
-					PluginProperties.getExtraTabFields())) {
+					BibsonomyProperties.getExtraTabFields())) {
 				preferences.put(JabRefPreferences.CUSTOM_TAB_FIELDS + extraTabID,
-						PluginProperties.getExtraTabFields());
+						BibsonomyProperties.getExtraTabFields());
 			}
 		}
 	}
