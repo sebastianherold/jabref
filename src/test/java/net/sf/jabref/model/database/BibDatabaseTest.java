@@ -36,7 +36,7 @@ public class BibDatabaseTest {
     @Test
     public void insertEntryAddsEntryToEntriesList() {
         BibEntry entry = new BibEntry();
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
         assertEquals(database.getEntries().size(), 1);
         assertEquals(database.getEntryCount(), 1);
         assertEquals(entry, database.getEntries().get(0));
@@ -46,24 +46,24 @@ public class BibDatabaseTest {
     public void containsEntryIdFindsEntry() {
         BibEntry entry = new BibEntry();
         assertFalse(database.containsEntryWithId(entry.getId()));
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
         assertTrue(database.containsEntryWithId(entry.getId()));
     }
 
     @Test(expected = KeyCollisionException.class)
     public void insertEntryWithSameIdThrowsException() {
         BibEntry entry0 = new BibEntry();
-        database.insertEntryWithDuplicationCheck(entry0);
+        database.insertEntry(entry0);
 
         BibEntry entry1 = new BibEntry(entry0.getId());
-        database.insertEntryWithDuplicationCheck(entry1);
+        database.insertEntry(entry1);
         fail();
     }
 
     @Test
     public void removeEntryRemovesEntryFromEntriesList() {
         BibEntry entry = new BibEntry();
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
 
         database.removeEntry(entry);
         assertEquals(Collections.emptyList(), database.getEntries());
@@ -72,7 +72,7 @@ public class BibDatabaseTest {
 
     @Test(expected = NullPointerException.class)
     public void insertNullEntryThrowsException() {
-        database.insertEntryWithDuplicationCheck(null);
+        database.insertEntry(null);
         fail();
     }
 
@@ -145,7 +145,7 @@ public class BibDatabaseTest {
         BibEntry expectedEntry = new BibEntry();
         TestEventListener tel = new TestEventListener();
         database.registerListener(tel);
-        database.insertEntryWithDuplicationCheck(expectedEntry);
+        database.insertEntry(expectedEntry);
         BibEntry actualEntry = tel.getBibEntry();
         assertEquals(expectedEntry, actualEntry);
     }
@@ -154,7 +154,7 @@ public class BibDatabaseTest {
     public void removeEntryPostsRemovedEntryEvent() {
         BibEntry expectedEntry = new BibEntry();
         TestEventListener tel = new TestEventListener();
-        database.insertEntryWithDuplicationCheck(expectedEntry);
+        database.insertEntry(expectedEntry);
         database.registerListener(tel);
         database.removeEntry(expectedEntry);
         BibEntry actualEntry = tel.getBibEntry();
@@ -165,7 +165,7 @@ public class BibDatabaseTest {
     public void changingEntryPostsChangeEntryEvent() {
         BibEntry entry = new BibEntry();
         TestEventListener tel = new TestEventListener();
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
         database.registerListener(tel);
 
         entry.setField("test", "some value");
@@ -177,75 +177,31 @@ public class BibDatabaseTest {
     public void correctKeyCountOne() {
         BibEntry entry = new BibEntry();
         entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 1);
+        database.insertEntry(entry);
+        assertEquals(database.getDuplicationChecker().getNumberOfKeyOccurrences("AAA"), 1);
     }
 
     @Test
     public void correctKeyCountTwo() {
         BibEntry entry = new BibEntry();
         entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
         entry = new BibEntry();
         entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 2);
-    }
-
-    @Test
-    public void setCiteKeySameKeySameEntry() {
-        BibEntry entry = new BibEntry();
-        entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
-        assertFalse(database.setCiteKeyForEntry(entry, "AAA"));
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 1);
-    }
-
-    @Test
-    public void setCiteKeyRemoveKey() {
-        BibEntry entry = new BibEntry();
-        entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
-        assertFalse(database.setCiteKeyForEntry(entry, null));
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 0);
-        assertEquals(Optional.empty(), entry.getCiteKeyOptional());
-    }
-
-    @Test
-    public void setCiteKeyDifferentKeySameEntry() {
-        BibEntry entry = new BibEntry();
-        entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
-        assertFalse(database.setCiteKeyForEntry(entry, "BBB"));
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 0);
-        assertEquals(database.getNumberOfKeyOccurrences("BBB"), 1);
-    }
-
-
-    @Test
-    public void setCiteKeySameKeyDifferentEntries() {
-        BibEntry entry = new BibEntry();
-        entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
-        entry = new BibEntry();
-        entry.setCiteKey("BBB");
-        database.insertEntryWithDuplicationCheck(entry);
-        assertTrue(database.setCiteKeyForEntry(entry, "AAA"));
-        assertEquals(entry.getCiteKeyOptional(), Optional.of("AAA"));
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 2);
-        assertEquals(database.getNumberOfKeyOccurrences("BBB"), 0);
+        database.insertEntry(entry);
+        assertEquals(database.getDuplicationChecker().getNumberOfKeyOccurrences("AAA"), 2);
     }
 
     @Test
     public void correctKeyCountAfterRemoving() {
         BibEntry entry = new BibEntry();
         entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
         entry = new BibEntry();
         entry.setCiteKey("AAA");
-        database.insertEntryWithDuplicationCheck(entry);
+        database.insertEntry(entry);
         database.removeEntry(entry);
-        assertEquals(database.getNumberOfKeyOccurrences("AAA"), 1);
+        assertEquals(database.getDuplicationChecker().getNumberOfKeyOccurrences("AAA"), 1);
     }
 
     @Test

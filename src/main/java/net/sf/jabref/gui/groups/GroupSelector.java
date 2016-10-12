@@ -44,29 +44,30 @@ import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CompoundEdit;
 
 import net.sf.jabref.Globals;
-import net.sf.jabref.MetaData;
-import net.sf.jabref.event.GroupUpdatedEvent;
 import net.sf.jabref.gui.BasePanel;
 import net.sf.jabref.gui.IconTheme;
 import net.sf.jabref.gui.JabRefFrame;
 import net.sf.jabref.gui.SidePaneComponent;
 import net.sf.jabref.gui.SidePaneManager;
 import net.sf.jabref.gui.help.HelpAction;
+import net.sf.jabref.gui.keyboard.KeyBinding;
 import net.sf.jabref.gui.maintable.MainTableDataModel;
 import net.sf.jabref.gui.undo.NamedCompound;
 import net.sf.jabref.gui.worker.AbstractWorker;
-import net.sf.jabref.logic.groups.AbstractGroup;
-import net.sf.jabref.logic.groups.AllEntriesGroup;
-import net.sf.jabref.logic.groups.EntriesGroupChange;
-import net.sf.jabref.logic.groups.GroupTreeNode;
-import net.sf.jabref.logic.groups.MoveGroupChange;
 import net.sf.jabref.logic.help.HelpFile;
 import net.sf.jabref.logic.l10n.Localization;
-import net.sf.jabref.logic.search.SearchMatcher;
-import net.sf.jabref.logic.search.matchers.MatcherSet;
-import net.sf.jabref.logic.search.matchers.MatcherSets;
-import net.sf.jabref.logic.search.matchers.NotMatcher;
 import net.sf.jabref.model.entry.BibEntry;
+import net.sf.jabref.model.groups.AbstractGroup;
+import net.sf.jabref.model.groups.AllEntriesGroup;
+import net.sf.jabref.model.groups.EntriesGroupChange;
+import net.sf.jabref.model.groups.GroupTreeNode;
+import net.sf.jabref.model.groups.MoveGroupChange;
+import net.sf.jabref.model.groups.event.GroupUpdatedEvent;
+import net.sf.jabref.model.metadata.MetaData;
+import net.sf.jabref.model.search.SearchMatcher;
+import net.sf.jabref.model.search.matchers.MatcherSet;
+import net.sf.jabref.model.search.matchers.MatcherSets;
+import net.sf.jabref.model.search.matchers.NotMatcher;
 import net.sf.jabref.preferences.JabRefPreferences;
 
 import com.google.common.eventbus.Subscribe;
@@ -125,6 +126,8 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
     private final AddToGroupAction moveToGroup = new AddToGroupAction(true);
     private final RemoveFromGroupAction removeFromGroup = new RemoveFromGroupAction();
 
+    private ToggleAction toggleAction;
+
 
     /**
      * The first element for each group defines which field to use for the quicksearch. The next two define the name and
@@ -132,6 +135,11 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
      */
     public GroupSelector(JabRefFrame frame, SidePaneManager manager) {
         super(manager, IconTheme.JabRefIcon.TOGGLE_GROUPS.getIcon(), Localization.lang("Groups"));
+
+        toggleAction = new ToggleAction(Localization.menuTitle("Toggle groups interface"),
+                Localization.menuTitle("Toggle groups interface"),
+                Globals.getKeyPrefs().getKey(KeyBinding.TOGGLE_GROUPS_INTERFACE),
+                IconTheme.JabRefIcon.TOGGLE_GROUPS);
 
         this.frame = frame;
         hideNonHits = new JRadioButtonMenuItem(Localization.lang("Hide non-hits"),
@@ -250,7 +258,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
                 groupsRoot.addNewGroup(newGroup, panel.getUndoManager());
                 panel.markBaseChanged();
                 frame.output(Localization.lang("Created group \"%0\".", newGroup.getName()));
-                panel.getBibDatabaseContext().getMetaData().postChange();
             }
         });
         andCb.addActionListener(e -> valueChanged(null));
@@ -343,7 +350,7 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
                 KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK));
 
 
-        setGroups(GroupTreeNode.fromGroup(new AllEntriesGroup()));
+        setGroups(GroupTreeNode.fromGroup(new AllEntriesGroup(Localization.lang("All entries"))));
     }
 
     private void definePopup() {
@@ -711,7 +718,7 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
         if (panel != null) {// panel may be null if no file is open any more
             panel.getMainTable().getTableModel().updateGroupingState(MainTableDataModel.DisplayOption.DISABLED);
         }
-        frame.groupToggle.setSelected(false);
+        getToggleAction().setSelected(false);
     }
 
     private void setGroups(GroupTreeNode groupsRoot) {
@@ -792,7 +799,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
                 UndoableModifyGroup undo = new UndoableModifyGroup(GroupSelector.this, groupsRoot, node, newGroup);
                 Optional<EntriesGroupChange> addChange = node.getNode().setGroup(newGroup, keepPreviousAssignments,
                         panel.getDatabase().getEntries());
-                panel.getBibDatabaseContext().getMetaData().postChange();
                 if (addChange.isPresent()) {
                     undoAddPreviousEntries = UndoableChangeEntriesOfGroup.getUndoableEdit(null, addChange.get());
                 }
@@ -871,7 +877,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
             panel.getUndoManager().addEdit(undo);
             panel.markBaseChanged();
             frame.output(Localization.lang("Added group \"%0\".", newGroup.getName()));
-            panel.getBibDatabaseContext().getMetaData().postChange();
         }
     }
 
@@ -896,7 +901,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
                 panel.getUndoManager().addEdit(undo);
                 panel.markBaseChanged();
                 frame.output(Localization.lang("Removed group \"%0\" and its subgroups.", group.getName()));
-                panel.getBibDatabaseContext().getMetaData().postChange();
             }
         }
     }
@@ -922,7 +926,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
                 panel.getUndoManager().addEdit(undo);
                 panel.markBaseChanged();
                 frame.output(Localization.lang("Removed all subgroups of group \"%0\".", node.getName()));
-                panel.getBibDatabaseContext().getMetaData().postChange();
             }
         }
     }
@@ -950,7 +953,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
                 panel.getUndoManager().addEdit(undo);
                 panel.markBaseChanged();
                 frame.output(Localization.lang("Removed group \"%0\".", group.getName()));
-                panel.getBibDatabaseContext().getMetaData().postChange();
             }
         }
     }
@@ -976,7 +978,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
             panel.getUndoManager().addEdit(undo);
             panel.markBaseChanged();
             frame.output(Localization.lang("Sorted immediate subgroups."));
-            panel.getBibDatabaseContext().getMetaData().postChange();
         }
     }
 
@@ -995,7 +996,6 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
             panel.getUndoManager().addEdit(undo);
             panel.markBaseChanged();
             frame.output(Localization.lang("Sorted all subgroups recursively."));
-            panel.getBibDatabaseContext().getMetaData().postChange();
         }
     }
 
@@ -1212,14 +1212,15 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
     public void setActiveBasePanel(BasePanel panel) {
         super.setActiveBasePanel(panel);
         if (panel == null) { // hide groups
-            frame.getSidePaneManager().hide("groups");
+            frame.getSidePaneManager().hide(GroupSelector.class);
             return;
         }
         MetaData metaData = panel.getBibDatabaseContext().getMetaData();
         if (metaData.getGroups().isPresent()) {
             setGroups(metaData.getGroups().get());
         } else {
-            GroupTreeNode newGroupsRoot = GroupTreeNode.fromGroup(new AllEntriesGroup());
+            GroupTreeNode newGroupsRoot = GroupTreeNode
+                    .fromGroup(new AllEntriesGroup(Localization.lang("All entries")));
             metaData.setGroups(newGroupsRoot);
             setGroups(newGroupsRoot);
         }
@@ -1268,4 +1269,15 @@ public class GroupSelector extends SidePaneComponent implements TreeSelectionLis
     public void listen(GroupUpdatedEvent updateEvent) {
         setGroups(updateEvent.getMetaData().getGroups().orElse(null));
     }
+
+    @Override
+    public void grabFocus() {
+        groupsTree.grabFocus();
+    }
+
+    @Override
+    public ToggleAction getToggleAction() {
+        return toggleAction;
+    }
+
 }

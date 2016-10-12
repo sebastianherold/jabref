@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.jabref.logic.mods.PageNumbers;
-import net.sf.jabref.logic.mods.PersonName;
-import net.sf.jabref.logic.util.strings.StringUtil;
+import net.sf.jabref.model.strings.StringUtil;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -292,6 +290,8 @@ class MSBibEntry {
 
         addField(document, rootNode, "JournalName", journalName);
         addField(document, rootNode, "PatentNumber", patentNumber);
+
+        addField(document, rootNode, "Number", number);
 
         addField(document, rootNode, "StandardNumber", standardNumber);
         addField(document, rootNode, "ConferenceName", conferenceName);
