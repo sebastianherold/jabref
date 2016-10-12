@@ -4,8 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.model.database.event.EntryAddedEvent;
 import net.sf.jabref.model.entry.BibEntry;
-import net.sf.jabref.model.event.EntryAddedEvent;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.logging.Log;

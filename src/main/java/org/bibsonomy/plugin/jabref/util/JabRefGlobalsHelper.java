@@ -1,7 +1,5 @@
 package org.bibsonomy.plugin.jabref.util;
 
-import java.util.List;
-
 import net.sf.jabref.Globals;
 
 public class JabRefGlobalsHelper {
@@ -35,10 +33,13 @@ public class JabRefGlobalsHelper {
     }
 
     private static String getMetaDataValue(String key) {
-        List<String> fileDI = BibsonomyMetaData.getMetaData().getData(key);
-        if (fileDI != null && fileDI.size() >= 1) {
-            return fileDI.get(0).trim();
-        }
+        /*
+        *TODO: Investigate changes in MetaData - zellerdev
+        *List<String> fileDI = BibsonomyMetaData.getMetaData().getData(key);
+        *if (fileDI != null && fileDI.size() >= 1) {
+        *    return fileDI.get(0).trim();
+        *}
+         */
         return null;
     }
 

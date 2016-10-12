@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.swing.JEditorPane;
 
-import net.sf.jabref.MetaData;
 import net.sf.jabref.gui.JabRefFrame;
 import net.sf.jabref.logic.l10n.Localization;
+import net.sf.jabref.model.metadata.MetaData;
 
 import org.bibsonomy.common.enums.GroupingEntity;
 import org.bibsonomy.model.BibTex;
@@ -42,7 +42,8 @@ public class RefreshTagListWorker extends AbstractBibsonomyWorker {
     public void run() {
         List<String> keywords = null;
         if (jabRefFrame.getCurrentBasePanel() != null) {
-            keywords = metaData.getData(MetaData.SELECTOR_META_PREFIX + "keywords");
+            //TODO: Investigate changes in MetaData - zellerdev
+            //keywords = metaData.getData(MetaData.SELECTOR_META_PREFIX + "keywords");
         }
 
         int start = 0, end = BibsonomyProperties.getTagCloudSize(), max = 1, min = 1;
@@ -113,7 +114,8 @@ public class RefreshTagListWorker extends AbstractBibsonomyWorker {
         jabRefFrame.repaint();
 
         if (metaData != null && keywords != null) {
-            metaData.putData(MetaData.SELECTOR_META_PREFIX + "keywords", keywords);
+            //TODO: Investigate changes in MetaData - zellerdev
+            //metaData.putData(MetaData.SELECTOR_META_PREFIX + "keywords", keywords);
         }
         jabRefFrame.output(Localization.lang("Done"));
     }

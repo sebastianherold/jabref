@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import net.sf.jabref.logic.util.strings.StringUtil;
 import net.sf.jabref.model.entry.BibEntry;
 import net.sf.jabref.model.entry.BibtexEntryTypes;
 import net.sf.jabref.model.entry.EntryType;
 import net.sf.jabref.model.entry.FieldName;
 import net.sf.jabref.model.entry.MonthUtil;
+import net.sf.jabref.model.strings.StringUtil;
 import net.sf.jabref.preferences.JabRefPreferences;
 
 import org.apache.commons.logging.Log;
@@ -110,7 +110,7 @@ public class JabRefModelConverter {
             List<String> authorString = new LinkedList<>();
             bibtex.getAuthor().forEach(author -> authorString.add(author.toString()));
             if (!authorString.isEmpty()) {
-                entry.setField(FieldName.AUTHOR, net.sf.jabref.logic.util.strings.StringUtil.stripBrackets(authorString.toString()));
+                entry.setField(FieldName.AUTHOR, StringUtil.stripBrackets(authorString.toString()));
             } else {
                 entry.clearField(FieldName.AUTHOR);
             }
@@ -118,7 +118,7 @@ public class JabRefModelConverter {
             List<String> editorString = new LinkedList<>();
             bibtex.getEditor().forEach(editor -> editorString.add(editor.toString()));
             if (!editorString.isEmpty()) {
-                entry.setField(FieldName.EDITOR, net.sf.jabref.logic.util.strings.StringUtil.stripBrackets(editorString.toString()));
+                entry.setField(FieldName.EDITOR, StringUtil.stripBrackets(editorString.toString()));
             } else {
                 entry.clearField(FieldName.EDITOR);
             }

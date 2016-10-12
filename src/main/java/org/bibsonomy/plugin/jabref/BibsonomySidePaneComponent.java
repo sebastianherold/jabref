@@ -75,6 +75,11 @@ public class BibsonomySidePaneComponent extends SidePaneComponent {
         return 0;
     }
 
+    @Override
+    public ToggleAction getToggleAction() {
+        return null;
+    }
+
     public void init() {
         // create a ChangeListener to react on newly added entries.
         BibsonomyDataBaseChangeListener bibsonomyDataBaseChangeListener = new BibsonomyDataBaseChangeListener(jabRefFrame);

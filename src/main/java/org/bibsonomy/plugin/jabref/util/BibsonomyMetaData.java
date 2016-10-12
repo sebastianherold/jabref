@@ -1,6 +1,7 @@
 package org.bibsonomy.plugin.jabref.util;
 
-import net.sf.jabref.MetaData;
+
+import net.sf.jabref.model.metadata.MetaData;
 
 public class BibsonomyMetaData {
 
@@ -12,7 +13,8 @@ public class BibsonomyMetaData {
     public static MetaData getMetaData() {
         if (BibsonomyMetaData.metaData == null) {
             metaData = new MetaData();
-            metaData.initializeNewDatabase();
+            //TODO: Investigate changes in MetaData - zellerdev
+            //metaData.initializeNewDatabase();
         }
         return metaData;
     }

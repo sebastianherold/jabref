@@ -25,11 +25,13 @@ public class ToggleSidePaneComponentAction extends AbstractAction {
     private BibsonomySidePaneComponent sidePaneComponent;
 
     public void actionPerformed(ActionEvent e) {
-        if (!manager.hasComponent("BibSonomy"))
-            manager.register("BibSonomy", sidePaneComponent);
+        if (!manager.hasComponent(BibsonomySidePaneComponent.class)) {
+            manager.register(sidePaneComponent);
+        }
 
-        if (jabRefFrame.getTabbedPane().getTabCount() > 0)
-            manager.toggle("BibSonomy");
+        if (jabRefFrame.getTabbedPane().getTabCount() > 0) {
+            manager.toggle(BibsonomySidePaneComponent.class);
+        }
 
     }
 
