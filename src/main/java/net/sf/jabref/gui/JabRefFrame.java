@@ -136,6 +136,7 @@ import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bibsonomy.plugin.jabref.BibsonomySidePaneComponent;
 import osx.macadapter.MacAdapter;
 
 /**
@@ -468,6 +469,8 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
 
     private GroupSelector groupSelector;
 
+    private BibsonomySidePaneComponent bibsonomySidePaneComponent;
+
     private int previousTabCount = -1;
 
     // The action for adding a new entry of unspecified type.
@@ -698,6 +701,9 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
         generalFetcher = new GeneralFetcher(sidePaneManager, this);
 
         sidePaneManager.register("groups", groupSelector);
+
+        bibsonomySidePaneComponent = new BibsonomySidePaneComponent(sidePaneManager, this);
+        sidePaneManager.register("bibsonomy", bibsonomySidePaneComponent);
     }
 
     /**
@@ -1326,6 +1332,8 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
         tools.add(abbreviateMedline);
         tools.add(unabbreviate);
         mb.add(tools);
+
+        mb.add(bibsonomySidePaneComponent.getMenuItem());
 
         options.add(showPrefs);
 

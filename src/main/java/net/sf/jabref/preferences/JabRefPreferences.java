@@ -421,6 +421,15 @@ public class JabRefPreferences {
     private static final String CUSTOM_TYPE_OPT = "customTypeOpt_";
     private static final String CUSTOM_TYPE_PRIOPT = "customTypePriOpt_";
 
+    /**
+     * Temporaly getter for {@link org.bibsonomy.plugin.jabref.gui.EntryEditorTabExtender EntryEditorTabExtender}
+     * TODO: Find another solution
+     * @return CUSTOM_TYPE_NAME
+     */
+    public static String getCustomTypeName(){
+        return CUSTOM_TYPE_NAME;
+    }
+
     // Prefs node for BibtexKeyPatterns
     public static final String BIBTEX_KEY_PATTERNS_NODE = "bibtexkeypatterns";
 
