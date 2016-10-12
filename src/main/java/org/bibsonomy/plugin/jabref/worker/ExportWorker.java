@@ -2,8 +2,10 @@ package org.bibsonomy.plugin.jabref.worker;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.logic.l10n.Localization;
 import net.sf.jabref.model.entry.BibEntry;
 import net.sf.jabref.model.entry.FieldName;
 
@@ -25,75 +27,79 @@ import org.bibsonomy.rest.exceptions.AuthenticationException;
  *
  * @author Waldemar Biller <biller@cs.uni-kassel.de>
  */
-public class ExportWorker extends AbstractPluginWorker {
+public class ExportWorker extends AbstractBibsonomyWorker {
 
-	private static final Log LOG = LogFactory.getLog(ExportWorker.class);
+    private static final Log LOGGER = LogFactory.getLog(ExportWorker.class);
 
-	private List<BibtexEntry> entries;
+    private List<BibEntry> entries;
 
-	public void run() {
-		try {
-			for (BibtexEntry entry : entries) {
-				String intrahash = entry.getField("intrahash");
-				jabRefFrame.output("Exporting post " + entry.getCiteKey());
+    public void run() {
+        try {
+            for (BibEntry entry : entries) {
+                Optional<String> citeKeyOpt = entry.getCiteKeyOptional();
+                if(citeKeyOpt.isPresent()) {
+                    jabRefFrame.output("Exporting post " + citeKeyOpt.get());
+                }else {
+                    jabRefFrame.output("Exporting post");
+                }
 
-				// add private or public if groups is empty
-				if (entry.getField("groups") == null || "".equals(entry.getField("groups"))) {
-					entry.setField("groups", PluginProperties.getDefaultVisibilty());
-				}
+                // add private or public if groups is empty
+                Optional<String> groupsOpt = entry.getField(FieldName.GROUPS);
+                if (groupsOpt.isPresent() || groupsOpt.get().isEmpty()) {
+                    entry.setField(FieldName.GROUPS, BibsonomyProperties.getDefaultVisibilty());
+                }
 
-				entry.setField("username", PluginProperties.getUsername());
-				String owner = entry.getField("owner");
-				entry.clearField("owner");
+                entry.setField(FieldName.USERNAME, BibsonomyProperties.getUsername());
+                Optional<String> ownerOpt = entry.getField(FieldName.OWNER);
+                entry.clearField(FieldName.OWNER);
 
-				Post<BibTex> post = JabRefModelConverter.convertEntry(entry);
-				if (post.getUser() == null) {
-					post.setUser(new User(PluginProperties.getUsername()));
-				}
+                Post<BibTex> post = JabRefModelConverter.convertEntry(entry);
+                if (post.getUser() == null) {
+                    post.setUser(new User(BibsonomyProperties.getUsername()));
+                }
 
-				if (intrahash != null && !"".equals(intrahash)) {
-					changePost(post);
-				} else {
-					createPost(post);
-				}
-				entry.setField("intrahash", post.getResource().getIntraHash());
-				entry.setField("owner", owner);
+                Optional<String> intrahashOpt = entry.getField(FieldName.INTRAHASH);
+                if (intrahashOpt.isPresent() && !intrahashOpt.get().isEmpty()) {
+                    changePost(post);
+                } else {
+                    createPost(post);
+                }
+                entry.setField(FieldName.INTRAHASH, post.getResource().getIntraHash());
+                ownerOpt.ifPresent(owner -> entry.setField(FieldName.OWNER, owner));
 
-				String files = entry.getField("file");
-				if (files != null && !"".equals(files)) {
-					WorkerUtil.performAsynchronously(new UploadDocumentsWorker(jabRefFrame, entry.getField("intrahash"), files));
-				}
-			}
-			jabRefFrame.output("Done.");
-			return;
-		} catch (AuthenticationException ex) {
-			(new ShowSettingsDialogAction(jabRefFrame)).actionPerformed(null);
-		} catch (Exception ex) {
-			LOG.error("Failed to export post ", ex);
-		} catch (Throwable ex) {
-			LOG.error("Failed to export post ", ex);
-		}
-		jabRefFrame.output("Failed.");
-	}
+                Optional<String> filesOpt = entry.getField(FieldName.FILE);
+                if (filesOpt.isPresent() && !filesOpt.get().isEmpty() && intrahashOpt.isPresent()) {
+                    WorkerUtil.performAsynchronously(new UploadDocumentsWorker(jabRefFrame, intrahashOpt.get(), filesOpt.get()));
+                }
+            }
+            jabRefFrame.output("Done.");
+            return;
+        } catch (AuthenticationException ex) {
+            (new ShowSettingsDialogAction(jabRefFrame)).actionPerformed(null);
+        } catch (Throwable ex) {
+            LOGGER.error("Failed to export post ", ex);
+        }
+        jabRefFrame.output(Localization.lang("Failed"));
+    }
 
-	private void changePost(Post<? extends Resource> post) throws Exception {
-		final List<String> hashes = getLogic().updatePosts(Collections.<Post<? extends Resource>> singletonList(post), PostUpdateOperation.UPDATE_ALL);
-		if (hashes.size() != 1) {
-			throw new IllegalStateException("changePosts returned " + hashes.size() + " hashes");
-		}
-		post.getResource().setIntraHash(hashes.get(0));
-	}
+    private void changePost(Post<? extends Resource> post) throws Exception {
+        final List<String> hashes = getLogic().updatePosts(Collections.singletonList(post), PostUpdateOperation.UPDATE_ALL);
+        if (hashes.size() != 1) {
+            throw new IllegalStateException("changePosts returned " + hashes.size() + " hashes");
+        }
+        post.getResource().setIntraHash(hashes.get(0));
+    }
 
-	private void createPost(Post<? extends Resource> post) throws Exception {
-		final List<String> hashes = getLogic().createPosts(Collections.<Post<? extends Resource>> singletonList(post));
-		if (hashes.size() != 1) {
-			throw new IllegalStateException("createPosts returned " + hashes.size() + " hashes");
-		}
-		post.getResource().setIntraHash(hashes.get(0));
-	}
+    private void createPost(Post<? extends Resource> post) throws Exception {
+        final List<String> hashes = getLogic().createPosts(Collections.singletonList(post));
+        if (hashes.size() != 1) {
+            throw new IllegalStateException("createPosts returned " + hashes.size() + " hashes");
+        }
+        post.getResource().setIntraHash(hashes.get(0));
+    }
 
-	public ExportWorker(JabRefFrame jabRefFrame, List<BibtexEntry> entries) {
-		super(jabRefFrame);
-		this.entries = entries;
-	}
+    public ExportWorker(JabRefFrame jabRefFrame, List<BibEntry> entries) {
+        super(jabRefFrame);
+        this.entries = entries;
+    }
 }

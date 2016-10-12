@@ -1,8 +1,10 @@
 package org.bibsonomy.plugin.jabref.worker;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 import net.sf.jabref.gui.JabRefFrame;
+import net.sf.jabref.logic.l10n.Localization;
 import net.sf.jabref.model.entry.BibEntry;
 import net.sf.jabref.model.entry.FieldName;
 
@@ -15,33 +17,32 @@ import org.bibsonomy.plugin.jabref.BibsonomyProperties;
  *
  * @author Waldemar Biller <biller@cs.uni-kassel.de>
  */
-public class DeletePostsWorker extends AbstractPluginWorker {
+public class DeletePostsWorker extends AbstractBibsonomyWorker {
 
-	private static final Log LOG = LogFactory.getLog(DeletePostsWorker.class);
-	
-	private BibtexEntry[] entries;
+    private static final Log LOGGER = LogFactory.getLog(DeletePostsWorker.class);
 
-	public void run() {
-		for (BibtexEntry entry : entries) {
-			final String intrahash = entry.getField("intrahash");
-			final String username = entry.getField("username");
-			if ((intrahash == null) || ("".equals(intrahash)) || ((intrahash != null) && !(PluginProperties.getUsername().equals(username)))) {
-				continue;
-			}
-			
-			try {
-				getLogic().deletePosts(PluginProperties.getUsername(), Arrays.asList(intrahash));
-				jabRefFrame.output("Deleting post " + intrahash);
-				entry.clearField("intrahash");
-			} catch (Exception ex) {
-				LOG.error("Failed deleting post " + intrahash);
-			}
-		}
-		jabRefFrame.output("Done.");
-	}
+    private BibEntry[] entries;
 
-	public DeletePostsWorker(JabRefFrame jabRefFrame, BibtexEntry[] entries) {
-		super(jabRefFrame);
-		this.entries = entries;
-	}
+    public void run() {
+        for (BibEntry entry : entries) {
+            final Optional<String> intrahashOpt = entry.getField(FieldName.INTRAHASH);
+            final Optional<String> usernameOpt = entry.getField(FieldName.USERNAME);
+
+            if ((intrahashOpt.isPresent()) || intrahashOpt.get().isEmpty() || (usernameOpt.isPresent() && !intrahashOpt.isPresent() && !(BibsonomyProperties.getUsername().equals(usernameOpt.get())))) {
+                try {
+                    getLogic().deletePosts(BibsonomyProperties.getUsername(), Collections.singletonList(intrahashOpt.get()));
+                    jabRefFrame.output(Localization.lang("Deleting post %0", intrahashOpt.get()));
+                    entry.clearField(FieldName.INTRAHASH);
+                } catch (Exception ex) {
+                    LOGGER.error(Localization.lang("Failed deleting post %0", intrahashOpt.get()));
+                }
+            }
+        }
+        jabRefFrame.output(Localization.lang("Done"));
+    }
+
+    public DeletePostsWorker(JabRefFrame jabRefFrame, BibEntry[] entries) {
+        super(jabRefFrame);
+        this.entries = entries;
+    }
 }

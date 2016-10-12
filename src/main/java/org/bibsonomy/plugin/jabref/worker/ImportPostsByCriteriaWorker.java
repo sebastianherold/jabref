@@ -2,12 +2,15 @@ package org.bibsonomy.plugin.jabref.worker;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
 import net.sf.jabref.gui.JabRefFrame;
 import net.sf.jabref.gui.importer.ImportInspectionDialog;
+import net.sf.jabref.logic.l10n.Localization;
 import net.sf.jabref.model.entry.BibEntry;
 import net.sf.jabref.model.entry.FieldName;
 
@@ -29,115 +32,117 @@ import org.bibsonomy.rest.exceptions.AuthenticationException;
  *
  * @author Waldemar Biller <biller@cs.uni-kassel.de>
  */
-public class ImportPostsByCriteriaWorker extends AbstractPluginWorker {
+public class ImportPostsByCriteriaWorker extends AbstractBibsonomyWorker {
 
-	private static final Log LOG = LogFactory.getLog(ImportPostsByCriteriaWorker.class);
+    private static final Log LOGGER = LogFactory.getLog(ImportPostsByCriteriaWorker.class);
 
-	private SearchType type;
+    private SearchType type;
 
-	private String criteria;
+    private String criteria;
 
-	private GroupingEntity grouping;
+    private GroupingEntity grouping;
 
-	private String groupingValue;
+    private String groupingValue;
 
-	private ImportInspectionDialog dialog;
+    private ImportInspectionDialog dialog;
 
-	private boolean ignoreRequestSize;
+    private boolean ignoreRequestSize;
 
-	public ImportPostsByCriteriaWorker(JabRefFrame jabRefFrame, String criteria, SearchType type, GroupingEntity grouping, String groupingValue, boolean ignoreRequestSize) {
-		super(jabRefFrame);
-		this.criteria = criteria;
-		this.type = type;
-		this.grouping = grouping;
-		this.groupingValue = groupingValue;
-		this.dialog = new ImportInspectionDialog(jabRefFrame, jabRefFrame.basePanel(), BibtexFields.DEFAULT_INSPECTION_FIELDS, "Import from BibSonomy", false);
+    public ImportPostsByCriteriaWorker(JabRefFrame jabRefFrame, String criteria, SearchType type, GroupingEntity grouping, String groupingValue, boolean ignoreRequestSize) {
+        super(jabRefFrame);
+        this.criteria = criteria;
+        this.type = type;
+        this.grouping = grouping;
+        this.groupingValue = groupingValue;
 
-		this.ignoreRequestSize = ignoreRequestSize;
+        this.dialog = new ImportInspectionDialog(jabRefFrame, jabRefFrame.getCurrentBasePanel(), Localization.lang("Import from BibSonomy"), false);
 
-		dialog.setLocationRelativeTo(jabRefFrame);
-		dialog.addCallBack(new PluginCallBack(this));
-	}
+        this.ignoreRequestSize = ignoreRequestSize;
 
-	public void run() {
+        dialog.setLocationRelativeTo(jabRefFrame);
+        dialog.addCallBack(new BibsonomyCallBack(this));
+    }
 
-		dialog.setVisible(true);
-		dialog.setProgress(0, 0);
+    public void run() {
 
-		int numberOfPosts = 0, start = 0, end = PluginProperties.getNumberOfPostsPerRequest(), cycle = 0, numberOfPostsPerRequest = PluginProperties.getNumberOfPostsPerRequest();
-		boolean continueFetching = false;
-		do {
-			numberOfPosts = 0;
+        dialog.setVisible(true);
+        dialog.setProgress(0, 0);
 
-			List<String> tags = null;
-			String search = null;
-			switch (type) {
-			case TAGS:
-				if (criteria.contains(" ")) {
-					tags = Arrays.asList(criteria.split("\\s"));
-				} else {
-					tags = Arrays.asList(new String[] { criteria });
-				}
-				break;
-			case FULL_TEXT:
-				search = criteria;
-				break;
-			}
+        int numberOfPosts = 0, start = 0, end = BibsonomyProperties.getNumberOfPostsPerRequest(), cycle = 0, numberOfPostsPerRequest = BibsonomyProperties.getNumberOfPostsPerRequest();
+        boolean continueFetching = false;
+        do {
+            List<String> tags = null;
+            String search = null;
+            switch (type) {
+                case TAGS:
+                    if (criteria.contains(" ")) {
+                        tags = Arrays.asList(criteria.split("\\s"));
+                    } else {
+                        tags = Collections.singletonList(criteria);
+                    }
+                    break;
+                case FULL_TEXT:
+                    search = criteria;
+                    break;
+            }
 
-			try {
+            try {
 
-				final Collection<Post<BibTex>> result = getLogic().getPosts(BibTex.class, grouping, groupingValue, tags, null, search, null, null, null, null, start, end);
-				for (Post<? extends Resource> post : result) {
-					dialog.setProgress(numberOfPosts++, numberOfPostsPerRequest);
-					BibtexEntry entry = JabRefModelConverter.convertPost(post);
+                final Collection<Post<BibTex>> result = getLogic().getPosts(BibTex.class, grouping, groupingValue, tags, null, search, null, null, null, null, null, start, end);
+                for (Post<? extends Resource> post : result) {
+                    dialog.setProgress(numberOfPosts++, numberOfPostsPerRequest);
+                    Optional<BibEntry> entry = JabRefModelConverter.convertPostOptional(post);
 
-					// clear fields if the fetched posts does not belong to the
-					// user
-					if (!PluginProperties.getUsername().equals(entry.getField("username"))) {
-						entry.clearField("intrahash");
-						entry.clearField("interhash");
-						entry.clearField("file");
-						entry.clearField("owner");
-					}
-					dialog.addEntry(entry);
-				}
+                    if(entry.isPresent()){
+                        BibEntry bibEntry = entry.get();
+                        // clear fields if the fetched posts does not belong to the user
+                        Optional<String> optUserName = bibEntry.getField(FieldName.USERNAME);
+                        if (optUserName.isPresent()) {
+                            if (!BibsonomyProperties.getUsername().equals(optUserName.get())) {
+                                bibEntry.clearField(FieldName.INTRAHASH);
+                                bibEntry.clearField(FieldName.FILE);
+                                bibEntry.clearField(FieldName.OWNER);
+                            }
+                        }
+                        dialog.addEntry(bibEntry);
+                    }
+                }
 
-				if (!continueFetching) {
-					if (!ignoreRequestSize) {
+                if (!continueFetching) {
+                    if (!ignoreRequestSize) {
 
-						if (!PluginProperties.getIgnoreMorePostsWarning()) {
+                        if (!BibsonomyProperties.getIgnoreMorePostsWarning()) {
 
-							if (numberOfPosts == numberOfPostsPerRequest) {
-								int status = JOptionPane.showOptionDialog(dialog, "<html>There are probably more than " + PluginProperties.getNumberOfPostsPerRequest()
-										+ " posts available. Continue importing?<br>You can stop importing entries by hitting the Stop button on the import dialog.", "More posts available",
-										JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.YES_OPTION);
+                            if (numberOfPosts == numberOfPostsPerRequest) {
+                                int status = JOptionPane.showOptionDialog(dialog, "<html>There are probably more than " + BibsonomyProperties.getNumberOfPostsPerRequest()
+                                                + " posts available. Continue importing?<br>You can stop importing entries by hitting the Stop button on the import dialog.", "More posts available",
+                                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.YES_OPTION);
 
-								switch (status) {
-								case JOptionPane.YES_OPTION:
-									continueFetching = true;
-									break;
+                                switch (status) {
+                                    case JOptionPane.YES_OPTION:
+                                        continueFetching = true;
+                                        break;
 
-								case JOptionPane.NO_OPTION:
-									this.stopFetching();
-									break;
-								default:
-									break;
-								}
-							}
-						}
-					}
-				}
-				start = ((cycle + 1) * numberOfPostsPerRequest);
-				end = ((cycle + 2) * numberOfPostsPerRequest);
+                                    case JOptionPane.NO_OPTION:
+                                        this.stopFetching();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+                start = ((cycle + 1) * numberOfPostsPerRequest);
+                end = ((cycle + 2) * numberOfPostsPerRequest);
 
-				cycle++;
-			} catch (AuthenticationException ex) {
-				(new ShowSettingsDialogAction((JabRefFrame) dialog.getOwner())).actionPerformed(null);
-			} catch (Exception ex) {
-				LOG.error("Failed to import posts", ex);
-			}
-		} while (fetchNext() && numberOfPosts >= numberOfPostsPerRequest);
+                cycle++;
+            } catch (AuthenticationException ex) {
+                LOGGER.warn(ex.getLocalizedMessage(), ex);
+                (new ShowSettingsDialogAction((JabRefFrame) dialog.getOwner())).actionPerformed(null);
+            }
+        } while (fetchNext() && numberOfPosts >= numberOfPostsPerRequest);
 
-		dialog.entryListComplete();
-	}
+        dialog.entryListComplete();
+    }
 }
