@@ -13,13 +13,12 @@ import org.bibsonomy.plugin.jabref.gui.GroupingComboBoxItem;
  */
 public class VisibilityItemListener implements ItemListener {
 
-	public void itemStateChanged(ItemEvent e) {
-		
-		GroupingComboBoxItem item = (GroupingComboBoxItem) e.getItem();
-		PluginProperties.setSidePaneVisibilityType(item.getKey());
-		PluginProperties.setSidePaneVisibilityName(item.getValue());
-		
-		PluginProperties.save();
-	}
+    public void itemStateChanged(ItemEvent e) {
+        GroupingComboBoxItem item = (GroupingComboBoxItem) e.getItem();
+        BibsonomyProperties.setSidePaneVisibilityType(item.getKey());
+        BibsonomyProperties.setSidePaneVisibilityName(item.getValue());
+
+        BibsonomyProperties.save();
+    }
 
 }

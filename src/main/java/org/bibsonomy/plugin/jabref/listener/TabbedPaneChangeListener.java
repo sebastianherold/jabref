@@ -18,29 +18,30 @@ import org.apache.commons.logging.LogFactory;
  * @author Waldemar Biller <biller@cs.uni-kassel.de>
  */
 public class TabbedPaneChangeListener implements ChangeListener {
-	private static final Log log = LogFactory.getLog(TabbedPaneChangeListener.class);
 
-	private PluginDataBaseChangeListener databaseChangeListener;
+	private static final Log LOGGER = LogFactory.getLog(TabbedPaneChangeListener.class);
+
+	private BibsonomyDataBaseChangeListener databaseChangeListener;
 
 	public void stateChanged(ChangeEvent e) {
 		if(e.getSource() instanceof JTabbedPane) {
 			JTabbedPane pane = (JTabbedPane) e.getSource();
 			Component[] components = pane.getComponents();
-			for (Component c : components) {
-				BasePanel bp = (BasePanel) c;
-				if (bp.database() != null) {
-					bp.database().addDatabaseChangeListener(databaseChangeListener);
+			for (Component component : components) {
+				BasePanel basePanel = (BasePanel) component;
+				if (basePanel.getDatabase() != null) {
+					basePanel.getDatabase().registerListener(databaseChangeListener);
 				} else {
-					log.warn("found tab-component without database");
+					LOGGER.warn("found tab-component without database");
 				}
 			}
 			if (components.length == 0) {
-				log.info("pane has no tab-components");
+				LOGGER.info("pane has no tab-components");
 			}
 		}
 	}
 	
-	public TabbedPaneChangeListener(PluginDataBaseChangeListener l) {
+	public TabbedPaneChangeListener(BibsonomyDataBaseChangeListener l) {
 		this.databaseChangeListener = l;
 	}
 
